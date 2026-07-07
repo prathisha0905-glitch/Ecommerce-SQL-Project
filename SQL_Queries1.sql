@@ -1,0 +1,147 @@
+
+-- E-COMMERCE SALES ANALYSIS USING MYSQL
+-- Database : ecommerce
+
+USE ecommerce;
+
+-- 1. Display Customer Details
+
+SELECT * FROM customer_details;
+
+-- 2. Display Basket Details
+
+SELECT * FROM basket_details;
+
+-- 3. Total Number of Customers
+
+SELECT COUNT(*) AS Total_Customers
+FROM customer_details;
+
+-- 4. Total Number of Orders
+
+SELECT COUNT(*) AS Total_Orders
+FROM basket_details;
+
+-- 5. Number of Unique Customers
+
+SELECT COUNT(DISTINCT customer_id) AS Unique_Customers
+FROM basket_details;
+
+-- 6. Total Items Sold
+
+SELECT SUM(basket_count) AS Total_Items_Sold
+FROM basket_details;
+
+-- 7. Latest Order Date
+
+SELECT MAX(basket_date) AS Latest_Order
+FROM basket_details;
+
+-- 8. First Order Date
+
+SELECT MIN(basket_date) AS First_Order
+FROM basket_details;
+
+-- 9. Top 10 Customers by Number of Orders
+
+SELECT customer_id,
+COUNT(*) AS Orders
+FROM basket_details
+GROUP BY customer_id
+ORDER BY Orders DESC
+LIMIT 10;
+
+-- 10. Top 10 Customers by Total Items Purchased
+
+SELECT customer_id,
+SUM(basket_count) AS Total_Items
+FROM basket_details
+GROUP BY customer_id
+ORDER BY Total_Items DESC
+LIMIT 10;
+
+-- 11. Daily Sales Analysis
+
+SELECT basket_date,
+SUM(basket_count) AS Items_Sold
+FROM basket_details
+GROUP BY basket_date
+ORDER BY basket_date;
+
+-- 12. Top Selling Products
+
+SELECT product_id,
+SUM(basket_count) AS Quantity
+FROM basket_details
+GROUP BY product_id
+ORDER BY Quantity DESC;
+
+-- 13. Customer Purchase Details (INNER JOIN)
+
+SELECT
+c.customer_id,
+b.product_id,
+b.basket_date,
+b.basket_count
+FROM customer_details c
+JOIN basket_details b
+ON c.customer_id = b.customer_id;
+
+-- 14. Top 5 Busiest Shopping Days
+
+SELECT basket_date,
+COUNT(*) AS Orders
+FROM basket_details
+GROUP BY basket_date
+ORDER BY Orders DESC
+LIMIT 5;
+
+-- 15. Average Basket Size
+
+SELECT AVG(basket_count) AS Average_Basket_Size
+FROM basket_details;
+
+-- 16. Customers with More Than 5 Orders
+
+SELECT customer_id,
+COUNT(*) AS Orders
+FROM basket_details
+GROUP BY customer_id
+HAVING COUNT(*) > 5;
+
+-- 17.top 5 customers by total items purchased
+
+SELECT customer_id,
+sum(basket_count)AS total_items_purchased
+FROM basket_details
+GROUP BY customer_id
+order by total_items_purchased DESC
+LIMIT 5;
+
+-- 18.number of orders placed each day
+
+SELECT basket_date,
+count(*) AS total_orders
+FROM basket_details
+GROUP BY basket_date
+ORDER BY basket_date;
+
+-- 19.customers who purchased more than the average number of items
+
+SELECT customer_id,
+       SUM(basket_count) AS Total_Items
+FROM basket_details
+GROUP BY customer_id
+HAVING SUM(basket_count) >
+(
+    SELECT AVG(basket_count)
+    FROM basket_details
+);
+
+-- 20 total items burchased by each customer
+
+SELECT customer_id,
+       SUM(basket_count) AS Total_Items_Purchased
+FROM basket_details
+GROUP BY customer_id
+ORDER BY customer_id;
